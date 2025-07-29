@@ -77,7 +77,7 @@ async def on_voice_state_update(member, before, after):
         print(f"Created channel: {channel_name} for {member.display_name}")
 
 # --- Auto Delete Empty Channels ---
-@tasks.loop(seconds=30)
+@tasks.loop(seconds=2)
 async def cleanup_empty_channels():
     for user_id, channel_id in list(user_temp_channels.items()):
         channel = bot.get_channel(channel_id)
