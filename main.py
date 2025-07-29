@@ -163,6 +163,19 @@ async def modify_channel_permission(interaction, target=None, connect=False, mes
 # --- Register Command Group ---
 bot.tree.add_command(vc_group)
 
+# --- Purge Command ---
+@bot.tree.command(name="purge", description="Delete a number of messages from the current channel.")
+@app_commands.describe(amount="The number of messages to delete (1-100)")
+@app_commands.checks.has_permissions(manage_messages=True)
+async def purge(interaction: discord.Interaction, amount: int):
+    if amount < 1 or amount > 100:
+        await interaction.response.send_message("You can only delete between 1 and 100 messages.", ephemeral=True)
+        return
+
+    await interaction.response.defer(ephemeral=True)  # Acknowledge the command
+    deleted = await interaction.channel.purge(limit=amount)
+    await interaction.followup.send(f"Deleted {len(deleted)} messages.", ephemeral=True)
+
 # --- Start ---
 keep_alive()
 bot.run(os.getenv("TOKEN"))
